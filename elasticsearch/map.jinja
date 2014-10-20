@@ -1,0 +1,22 @@
+{% set default_data = {'config':
+    {'network':
+        {'host': 'localhost'},
+     'http':
+        {'port': 9200},
+     'script':
+        {'disable_dynamic': True}},
+    'external_host': 'localhost',
+    'external_url': 'http://%s/elasticsearch/',
+    'nginx_site_template': 'salt://elasticsearch/files/elasticsearch.site',
+    'htpasswd_users': {'test': '{SSHA}hEaOL9cy5+VAio6PYOCTIa6DxFmFf7OpNemRyw=='}} %}
+
+{% set os_data = salt['grains.filter_by']({
+    'Debian': {
+        'package_name': 'elasticsearch',
+        'daemon': 'elasticsearch',
+        'configuration_file_path': '/etc/elasticsearch/elasticsearch.yml',
+        'nginx_site_path': '/etc/nginx/sites-enabled/elasticsearch.site',
+        'htpasswd_path': '/etc/nginx/elasticsearch_htpasswd',
+    },
+}, merge=salt['pillar.get']('elasticsearch:lookup')) %}
+{% set elasticsearch = salt['yaml_utils.dict_update'](default_data, os_data) %}

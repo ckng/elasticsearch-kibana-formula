@@ -1,0 +1,41 @@
+{% from "elasticsearch/map.jinja" import elasticsearch with context %}
+{% from "kibana/map.jinja" import kibana with context %}
+
+
+server {
+  listen 443;
+
+  ssl on;
+  ssl_certificate     /etc/ssl/tinyclues/wildcard.tinyclues.net.crt;
+  ssl_certificate_key     /etc/ssl/tinyclues/wildcard.tinyclues.net.pem;
+
+  root {{ kibana.directory }}/kibana-{{ kibana.version }}/;
+
+  server_name  {{ elasticsearch.external_host }};
+
+  access_log  /var/log/nginx/elasticsearch.log;
+  error_log   /var/log/nginx/elasticsearch.error.log;
+
+  # buffer larger messages
+  client_max_body_size 150k;
+  client_body_buffer_size 150k;
+
+  location / {
+    try_files $uri $uri/ /index.html;
+
+    auth_basic "Restricted";
+    auth_basic_user_file {{ elasticsearch.htpasswd_path }};
+  }
+
+  location /elasticsearch/ {
+    proxy_pass http://127.0.0.1:{{ elasticsearch.config.http.port }}/;
+
+    proxy_set_header X-Real-IP         $remote_addr;
+    proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Protocol   $scheme;
+    proxy_set_header Host              $host;
+
+    auth_basic "Restricted";
+    auth_basic_user_file {{ elasticsearch.htpasswd_path }};
+  }
+}

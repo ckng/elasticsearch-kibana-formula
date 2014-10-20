@@ -1,0 +1,14 @@
+{% set default_data = {'version': '3.1.1',
+    'hash': 'sha512=c61103b3ee0a7eacabb36de47439685378eb61ecd57663ded43ed09bbc7ca208f08f5c71a9ccb5bde02e03fad32fd272ed5736d494681c32ac5692d2aaeee146',
+    'config': {'default_route': '/dashboard/file/default.json',
+               'kibana_index': 'kibana-int',
+               'panel_names': ['histogram','map','goal','table','filtering','timepicker','text','hits','column','trends','bettermap','query','terms','stats','sparklines']}} %}
+
+{% set os_data = salt['grains.filter_by']({
+    'Debian': {
+        'directory': '/var/www'
+    },
+}, merge=salt['pillar.get']('kibana:lookup')) %}
+
+{% set kibana = salt['yaml_utils.dict_update'](default_data, os_data) %}
+
