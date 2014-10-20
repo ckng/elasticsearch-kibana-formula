@@ -5,5 +5,5 @@
 
 define(['settings'],
 function (Settings) {
-  return new Settings({{ kibana.config }});
+  return new Settings({{ kibana.config | json }});
 });
