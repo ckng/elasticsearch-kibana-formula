@@ -6,8 +6,8 @@ server {
   listen 443;
 
   ssl on;
-  ssl_certificate     /etc/ssl/tinyclues/wildcard.tinyclues.net.crt;
-  ssl_certificate_key     /etc/ssl/tinyclues/wildcard.tinyclues.net.pem;
+  ssl_certificate {{ elasticsearch.ssl_certificate }};
+  ssl_certificate_key {{ elasticsearch.ssl_certificate_key }};
 
   root {{ kibana.directory }}/kibana-{{ kibana.version }}/;
 
