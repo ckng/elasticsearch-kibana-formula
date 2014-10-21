@@ -5,7 +5,7 @@
 {% if grains.os_family == 'Debian' %}
 elasticsearch_pkgrepo:
     pkgrepo.managed:
-        - name: "deb http://packages.elasticsearch.org/elasticsearch/1.0/debian stable main"
+        - name: "deb http://packages.elasticsearch.org/elasticsearch/{{ elasticsearch.version }}/debian stable main"
         - key_url: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
         - file: /etc/apt/sources.list.d/elasticsearch.list
         - require_in:
