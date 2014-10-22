@@ -1,6 +1,6 @@
 {% from "elasticsearch/map.jinja" import elasticsearch with context %}
 
-{% if 'htpasswd_users' in elasticsearch %}
+{% if elasticsearch.htpasswd_users %}
 elasticsearch_htpasswd:
     file.managed:
         - name: {{ elasticsearch.htpasswd_path }}

@@ -23,8 +23,10 @@ server {
   location / {
     try_files $uri $uri/ /index.html;
 
+    {% if elasticsearch.htpasswd_users %}
     auth_basic "Restricted";
     auth_basic_user_file {{ elasticsearch.htpasswd_path }};
+    {% endif %}
   }
 
   location /elasticsearch/ {
@@ -35,7 +37,9 @@ server {
     proxy_set_header X-Forwarded-Protocol   $scheme;
     proxy_set_header Host              $host;
 
+    {% if elasticsearch.htpasswd_users %}
     auth_basic "Restricted";
     auth_basic_user_file {{ elasticsearch.htpasswd_path }};
+    {% endif %}
   }
 }
